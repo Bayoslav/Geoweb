@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <h1> Geoweb </h1>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    </head>
+    <body>
+        <form actions="generate-report" method="post" id="generate-form">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+        <h3>JSON Response</h3>
+        <p id="json-resp">
+
+        </p>
+    </body>
+    <script>
+        $('form').submit(function(e) {
+            e.preventDefault();
+            console.log($(this));
+            var formData = new FormData(document.getElementById("generate-form"));
+            $.ajax({
+                url: "generate-report",
+                type: "POST",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(resp) {
+                    $("#json-resp").text(JSON.stringify(resp));
+                },
+            });
+        });
+    </script>
+</html>
