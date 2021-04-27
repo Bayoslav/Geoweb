@@ -9,4 +9,4 @@ class IndexView(View):
     def get(self, request):
 
         form = GeoFeatureFileForm()
-        return render(request, "index.html", {"form": form})
+        return render(request, "index.html", {"form": form, "url": ""})

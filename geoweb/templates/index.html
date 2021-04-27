@@ -27,7 +27,7 @@
             e.preventDefault();
             var formData = new FormData(document.getElementById("generate-form"));
             $.ajax({
-                url: conversion ? "{% url 'api:convert-file' %}" :"{% url 'api:generate-report' %}",
+                url: conversion ? "{% url 'api:convert-file-ajax' %}" :"{% url 'api:generate-report' %}",
                 type: "POST",
                 data: formData,
                 cache: false,
