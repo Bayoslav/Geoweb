@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from geoweb.forms import GeoFeatureFileForm
-
 from django.views import View
+
+from geoweb.forms import GeoFeatureFileForm
 
 
 class IndexView(View):

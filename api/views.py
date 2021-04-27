@@ -1,14 +1,14 @@
 import datetime
+import shutil
 from zipfile import ZipFile
-
-from django.templatetags.static import static
 
 import geopandas as gpd
 from django.conf import settings
-from django.shortcuts import render
 from django.http import FileResponse
-from rest_framework.views import APIView, Response
+from django.shortcuts import render
+from django.templatetags.static import static
 from rest_framework.response import Response
+from rest_framework.views import APIView, Response
 
 
 class GenerateReportView(APIView):
@@ -39,18 +39,22 @@ class ConvertFileView(APIView):
 
     def post(self, request, format=None):
         data = gpd.read_file(request.FILES["geo_features"])
-        file_type = "shp"  # https://gis.stackexchange.com/questions/317714/creating-a-shapefile-within-a-zip-file-with-fiona
+        # https://gis.stackexchange.com/questions/317714/creating-a-shapefile-within-a-zip-file-with-fiona
+        file_type = "folder"
         kwargs = {}
-        current_datetime = datetime.datetime.now()
-        prefix = ""
+        current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        if getattr(request.POST, "to_json"):
+        if "to_json" in request.POST.keys() and request.POST["to_json"]:
             file_type = "json"
             kwargs["driver"] = "GeoJSON"
 
         name = f"{current_datetime}." + file_type
         full_name = "api/static/" + name
-
         data.to_file(full_name, **kwargs)
-
+        if file_type == "folder":
+            name = f"{current_datetime}.zip"
+            filename = shutil.make_archive(
+                f"api/static/{current_datetime}", 'zip', full_name)
+            # Delete a folder after it's been zipped
+            shutil.rmtree(f"{full_name}")
         return Response({"url": static(name)})

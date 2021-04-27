@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.urls import include, path
-from api.views import GenerateReportView, ConvertFileView
 from django.conf.urls.static import static
+from django.urls import path
+
+from api.views import ConvertFileView, GenerateReportView
 
 urlpatterns = [
     path('generate-report', GenerateReportView.as_view(), name="generate-report"),
